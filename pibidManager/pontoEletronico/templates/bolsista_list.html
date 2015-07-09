@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block titulo %} Lista de Bolsista {% endblock %}
+{% block conteudo %}
+<table>
+{% if not object_list %}
+    Sem bolsistas
+{% endif %}
+{% for bolsista in object_list %}
+    <tr>
+        <td><a href="{% url 'pontoEletronico:bolsistaDetail' bolsista.id %}"> {{ bolsista }} </a></td>
+        <td>Alterar</td>
+        <td>Criar</td>
+    </tr>
+{% endfor %}
+</table>
+<p>
+    <a href="{% url 'pontoEletronico:bolsistaCreate' %}">Criar Bolsista</a>
+</p>
+
+{% endblock%}

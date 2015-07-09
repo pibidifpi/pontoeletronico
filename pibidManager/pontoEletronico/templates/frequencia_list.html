@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load extra_tags %}
+{% block conteudo %}
+    {% if user|has_group:"Coordenador" %}
+        <form action="" method="get">
+        {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Consultar"/>
+        </form>
+    {% endif %}
+    <ul>
+    {% for frequencia in object_list %}
+        <li><a href="{% url 'pontoEletronico:frequenciaDetail' frequencia.id %}"> {{ frequencia }} </a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

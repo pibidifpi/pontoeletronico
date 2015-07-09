@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load extra_tags %}
+{% block titulo %} Frequência{% endblock %}
+{% block conteudo %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2">Bolsista:</div>
+            <div class="col-sm-8">{{ object.bolsista }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">Mês:</div>
+            <div class="col-sm-8">{{ object.mes }}/{{ object.ano}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">Carga horaria:</div>
+            <div class="col-sm-8">{{ object.carga_horaria | timedelta }}</div>
+        </div>
+    </div>
+    <h3>
+        Presencas:
+    </h3>
+    <table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Entrada</th>
+            <th>Saida</th>
+            <th>Duracao</th>
+        </tr>
+    </thead>
+    {% for presenca in object_list %}
+    <tbody>
+        <tr>
+            <td>{{ presenca.data | date:'d/m/y' }}</td>
+            <td>{{ presenca.chegada | time:"H:i" }}</td>
+            <td>{{ presenca.saida | time:"H:i" }}</td>
+            <td>{{ presenca.duracao | timedelta }}</td>
+        </tr>
+    </tbody>
+
+    {% endfor %}
+    </table>
+{% endblock %}

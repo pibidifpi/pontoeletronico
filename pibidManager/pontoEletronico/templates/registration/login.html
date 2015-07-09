@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block semmenu %}
+    <div class="semmenu">
+        <div class="form-center center-block">
+                    <form class="form" action="" method="post">
+                    {% csrf_token %}
+                    {{ form.erros }}
+                    {% for field in form %}
+                        <div class="form-group">
+                        {% if field.name == "password" %}
+                            <input type="password" class="form-control input-lg" name="{{ field.html_name }}"
+                               id="{{ field.id_for_label}}" placeholder="{{ field.name }}"/>
+                            {{ field.erros}}
+                        {% else %}
+                            <input type="text" class="form-control input-lg" name="{{ field.html_name }}"
+                               id="{{ field.id_for_label}}" placeholder="{{ field.name }}"/>
+                            {{ field.erros}}
+                        {% endif %}
+
+                        </div>
+                    {% endfor %}
+                    <div class="form-group">
+                        <input class="btn" type="submit" name="registrarPresenca" value="Entrar">
+                        <a class="btn" href="{% url 'pontoEletronico:index' %}">Voltar</a>
+                    </div>
+                    <!--input type="submit" name="entrar" value="Entrar no Sistema"-->
+                    </form>
+        </div>
+    </div>
+{% endblock %}
+{% block menu %} {% endblock %}

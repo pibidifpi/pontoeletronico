@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block titulo %} Bolsista {% endblock %}
+{% block conteudo %}
+    <p>
+        Nome: {{ object.nome }} <br/>
+        E-mail: {{ object.email }} <br/>
+    </p>
+    <p>
+        Frequencias:
+        <ul>
+        {% for frequencia in object.frequencia_set.all %}
+            <li>
+                <a href="{% url 'pontoEletronico:frequenciaDetail' frequencia.id%}">{{ frequencia }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </p>
+
+{% endblock %}

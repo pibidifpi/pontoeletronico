@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load extra_tags %}
+{% block conteudo %}
+    <table class="ptable">
+        <tr>
+            <th>Bolsista</th>
+            <th>Data</th>
+            <th>Chegada</th>
+            <th>Saida</th>
+            <th>Durancao</th>
+
+        </tr>
+
+    {% for presenca in object_list %}
+        <tr>
+            <td>{{ presenca.bolsista }}</td>
+            <td>{{ presenca.data | date:"d-M-Y" }}</td>
+            <td>{{ presenca.chegada | date:"H:i"}}</td>
+            <td>{% if presenca.saida %}
+                    {{ presenca.saida | date:"H:i"}}
+                {% else %}
+                    Em aberto
+                {% endif %}
+            </td>
+
+            <td>{{ presenca.duracao | timedelta}}</td>
+            <td><a href="{% url 'pontoEletronico:presencaUpdate' presenca.id%}" >Alterar</a></td>
+            <td><a href="{% url 'pontoEletronico:presencaUpdate' presenca.id%}" >Excluir</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+    <div class="paginator">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}"><</a>
+            {% endif %}
+            {% for num_page in paginator.page_range %}
+                {% if num_page != page_obj.number %}
+                    <a href="?page={{ num_page }}">{{ num_page }}</a>
+                {% else %}
+                    {{ page_obj.number }}
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">></a>
+            {% endif %}
+        </span>
+    </div>
+    <p>
+        <a href="{% url 'pontoEletronico:presencaCreate' %}" >Criar Presenca</a>
+    </p>
+{% endblock %}

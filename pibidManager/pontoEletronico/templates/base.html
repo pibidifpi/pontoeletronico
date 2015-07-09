@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head lang="pt-br">
+    {% load staticfiles %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static '/admin/css/widgets.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+
+    <script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+
+    <script type="text/javascript" src="{% static 'admin/js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+    <script type="text/javascript" src="/my_admin/jsi18n"></script>
+
+    {{ form.media }}
+    <meta charset="UTF-8">
+    <title>Ponto Eletrônico do PIBID Zona Sul</title>
+
+</head>
+<body>
+{% load extra_tags %}
+<div id="container">
+
+<div id="header">
+    <h1>
+        PIBID Informática - Teresina Zona Sul
+    </h1>
+    <p>
+        {% if user|has_group %}
+            Nome de usuário:{{ user.username }} Tipo:{{ user|group_name }}
+            <a href="{% url 'pontoEletronico:logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'pontoEletronico:login' %}">
+                <span class="glyphicon glyphicon-lock"></span>
+            </a>
+        {% endif %}
+    </p>
+</div>
+
+<div id="wrapper">
+{% block semmenu %} {% endblock %}
+<div id="right">
+    <h2><a href="#">{% block titulo %}  {% endblock %}</a></h2>
+    {% block conteudo %}
+
+    {% endblock %}
+</div>
+
+{% block menu %}
+<div id="left">
+            {% if user|has_group  %}
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#">Menu</a></li>
+                {% if user|has_group:"Bolsista" %}
+                        <li><a href="{% url 'pontoEletronico:bolsistaDetail' -1 %}">Informacoes</a></li>
+                        <li><a href="{% url 'pontoEletronico:frequenciaList' %}">Frequência</a></li>
+                {% endif %}
+
+                {% if user|has_group:"Coordenador" %}
+                        <li><a href="{% url 'pontoEletronico:presencaList' %}">Presenca</a></li>
+                        <li><a href="{% url 'pontoEletronico:frequenciaList'%}">Frequência</a></li>
+                        <li><a href="{% url 'pontoEletronico:bolsistaList' %}">Bolsista</a></li>
+                {% endif %}
+                </ul>
+            {% endif %}
+</div>
+{% endblock %}
+</div>
+
+<div id="footer">
+Instituto Federal do Piauí - Campus Teresina Zona Sul <br/>
+Laboratório Interdisciplinar de Formação de Educadores - LIFE <br/>
+Desenvolvimento: LIFE - Teresina Zona Sul
+</div>
+</div>
+
+
+</body>
+</html>

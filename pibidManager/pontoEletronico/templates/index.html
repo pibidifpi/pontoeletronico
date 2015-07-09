@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load extra_tags %}
+{% block semmenu %}
+    <div class="semmenu">
+        <div class="form-center center-block">
+                    <form class="form" action="" method="post">
+                    {% csrf_token %}
+                    {{ form.erros }}
+                    {% for field in form %}
+                        <div class="form-group">
+                        {% if field.name == "password" %}
+                            <input type="password" class="form-control input-lg" name="{{ field.html_name }}"
+                               id="{{ field.id_for_label}}" placeholder="{{ field.name }}"/>
+                            {{ field.erros}}
+                        {% else %}
+                            <input type="text" class="form-control input-lg" name="{{ field.html_name }}"
+                               id="{{ field.id_for_label}}" placeholder="{{ field.name }}"/>
+                            {{ field.erros}}
+                        {% endif %}
+
+                        </div>
+                    {% endfor %}
+                    <div class="form-group">
+                        <input class="btn btn-block" type="submit" name="registrarPresenca" value="Registrar Presenca">
+                    </div>
+                    <!--input type="submit" name="entrar" value="Entrar no Sistema"-->
+                    </form>
+        </div>
+    <h3> </h3>
+    <table class="table text-center" >
+        <tr>
+            <th class="text-center">Bolsista</th>
+            <th class="text-center">Entrada</th>
+            <th class="text-center">Saida</th>
+            <th class="text-center">Duracao</th>
+        </tr>
+        {% for frequencia in object_list %}
+            <tr>
+                <td>{{ frequencia.bolsista }}</td>
+                <td>{{ frequencia.chegada | time:'H:i' }}</td>
+                <td>
+                    {% if frequencia.saida %}
+                        {{ frequencia.saida | time:'H:i' }}
+                    {% else %}
+                        Em aberto
+                    {% endif %}
+                </td>
+                <td>
+                    {% if frequencia.saida %}
+                        {{ frequencia.duracao | timedelta }}
+                    {% else %}
+                        Em aberto
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
+{% block menu %} {% endblock %}

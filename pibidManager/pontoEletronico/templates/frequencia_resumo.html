@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load extra_tags %}
+{% block titulo %} Frequencias do mês {% endblock titulo %}
+{% block conteudo %}
+    <p>
+        {% if object_list %}
+            Mês: {{ mes }}/{{ ano }}
+        {% else %}
+            Sem frequencia
+        {% endif %}
+    </p>
+    <ul>
+    {% for frequencia in object_list %}
+        <li>
+            <a href="{% url 'pontoEletronico:frequenciaDetail' frequencia.id %}">
+                {{ frequencia }} - {{ frequencia.carga_horaria | timedelta }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}
