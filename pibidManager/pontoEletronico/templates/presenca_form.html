@@ -1,4 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'base_registration.html' %}
+{% block titulo %} Cadastrar Presença{% endblock %}
 {% block conteudo %}
     <form action="" method="post">
         {% csrf_token %}
@@ -12,8 +13,13 @@
             </tr>
         {% endfor %}
         </table>
-        <input type="submit" value="Cadastrar">
-        <a href="{% url 'pontoEletronico:presencaList' %}">voltar</a>
+        <div class="control-group">
+            <label class="control-label" for="salvar"></label>
+            <div class="controls">
+                <input type="submit" class="btn btn-primary" value="Cadastrar"/>
+                <a class="btn btn-danger pull-right" href="{% url 'pontoEletronico:presencaList' %}">Voltar</a>
+            </div>
+        </div>
     </form>
 
 {% endblock %}

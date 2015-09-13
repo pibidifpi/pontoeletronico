@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_IMG = os.path.dirname(os.path.realpath(__file__))
 
 
 # Quick-start development settings - unsuitable for production
@@ -22,10 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '8$$vz@(5h#78um59r+ij-nm9*r*9l$cgt)=(yg+0&2^&x6=*6t'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = True
 
+ADMINS = (
+    ('Stephenson Galvao', 'stepgalvao@gmail.com'),
+    ('Charles Miranda', 'cjlmiranda.2@gmail.com'),
+)
 
 ALLOWED_HOSTS = []
 
@@ -107,3 +111,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/home/media/media.lawrence.com/media/"
+MEDIA_ROOT = os.path.join(BASE_IMG,'img')
+
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash.
+# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
+# MEDIA_URL = 'http://localhost:90/media/'
+MEDIA_URL = '/media/'
+
+INTERNAL_IPS = ('127.0.0.1')

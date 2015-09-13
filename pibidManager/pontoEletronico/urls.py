@@ -20,9 +20,15 @@ urlpatterns = [
     url(r'^bolsistaDetail/(?P<pk>[0-9,-1]+)', BolsistaDetail.as_view(), name="bolsistaDetail"),
     url(r'^bolsistaList/', BolsistaList.as_view(), name="bolsistaList"),
     url(r'^bolsistaCreate/', BolsistaCreate.as_view(), name="bolsistaCreate"),
+    url(r'^bolsistaUpdate/(?P<pk>[0-9,-1]+)', BolsistaUpdate.as_view(), name="bolsistaUpdate"),
+    url(r'^coordenadorBolsistaUpdate/(?P<pk>[0-9,-1]+)', CoordenadorBolsistaUpdate.as_view(), name="coordenadorBolsistaUpdate"),
+
+    url(r'^bolsistaDelete/(?P<pk>[0-9,-1]+)', BolsistaDelete.as_view(), name="bolsistaDelete"),
 
     url(r'^presencaList/', PresencaList.as_view(), name="presencaList"),
     url(r'^presencaCreate/', PresencaCreate.as_view(), name="presencaCreate"),
     url(r'^presencaUpdate/(?P<pk>[0-9,-1]+)', PresencaUpdate.as_view(), name="presencaUpdate"),
+    url(r'^presencaDelete/(?P<pk>[0-9,-1]+)', PresencaDelete.as_view(), name="presencaDelete"),
+
 
 ]

@@ -1,31 +1,54 @@
 {% extends 'base.html' %}
 {% block semmenu %}
     <div class="semmenu">
-        <div class="form-center center-block">
-                    <form class="form" action="" method="post">
-                    {% csrf_token %}
-                    {{ form.erros }}
-                    {% for field in form %}
-                        <div class="form-group">
-                        {% if field.name == "password" %}
-                            <input type="password" class="form-control input-lg" name="{{ field.html_name }}"
-                               id="{{ field.id_for_label}}" placeholder="{{ field.name }}"/>
-                            {{ field.erros}}
-                        {% else %}
-                            <input type="text" class="form-control input-lg" name="{{ field.html_name }}"
-                               id="{{ field.id_for_label}}" placeholder="{{ field.name }}"/>
-                            {{ field.erros}}
+        <div class="register-container container">
+            <div class="row">
+                <div class="register span6">
+                 <form action="" method="post">
+
+                     <h2>ACESSAR O <span class="red"><strong>SISTEMA</strong></span></h2>
+
+                     {% csrf_token %}
+                        {{ form.erros }}
+                        {% if messages %}
+                            {% for message in messages %}
+
+                                {% if message.tags == "error" %}
+
+                                    <div class="alert alert-danger" role="alert"> {{ message }}</div>
+                                {% else %}
+                                    <div class="alert alert-{{ message.tags }}" role="alert"> {{ message }}</div>
+                                {% endif %}
+
+                            {% endfor %}
                         {% endif %}
 
-                        </div>
-                    {% endfor %}
-                    <div class="form-group">
-                        <input class="btn" type="submit" name="registrarPresenca" value="Entrar">
-                        <a class="btn" href="{% url 'pontoEletronico:index' %}">Voltar</a>
-                    </div>
-                    <!--input type="submit" name="entrar" value="Entrar no Sistema"-->
-                    </form>
+                        {% for field in form %}
+                            <div class="form-group">
+                            {% if field.name == "password" %}
+                                <input type="password" class="form-control input-lg" name="{{ field.html_name }}"
+                                   id="{{ field.id_for_label}}" placeholder="{{ field.name }}"/>
+                                {{ field.erros}}
+                            {% else %}
+                                <input type="text" class="form-control input-lg" name="{{ field.html_name }}"
+                                   id="{{ field.id_for_label}}" placeholder="{{ field.name }}"/>
+                                {{ field.erros}}
+                            {% endif %}
+
+                            </div>
+                        {% endfor %}
+
+                  <button type="submit">ENTRAR</button>
+
+
+
+                   </form>
+                </div>
+            </div>
+
+            <p><a href="{% url 'pontoEletronico:index' %}">Ir para o registro de presença</a></p>
         </div>
+
     </div>
 {% endblock %}
 {% block menu %} {% endblock %}

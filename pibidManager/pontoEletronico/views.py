@@ -1,3 +1,4 @@
+from django.forms.models import modelform_factory
 from django.shortcuts import render
 from django.views.generic import *
 from django.forms.models import *
@@ -10,8 +11,11 @@ from django.core.urlresolvers import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.contrib.auth.forms import AuthenticationForm
+from xdg.Exceptions import ValidationError
 from models import *
 from forms import *
+from django.http import HttpResponse
+from django.contrib import messages
 
 #Classes de restricoes das views
 class CoordenadorRequiredMixi(object):
@@ -51,6 +55,14 @@ class IndexView(FormView):
                 return HttpResponseRedirect(reverse_lazy('pontoEletronico:index'))
         return HttpResponseRedirect(reverse_lazy('pontoEletronico:index'))#seria pagina de erro
 
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            "Username ou password invalidos."
+        )
+        return super(IndexView, self).form_invalid(form)
+
+
     '''
     Funcao responsavel pela presenca
     @TODO Nao identifique casos que a frequencia possa falhar
@@ -76,6 +88,11 @@ class IndexView(FormView):
             #presenca.save()
             #return True
         presenca.save()
+
+        messages.success(
+            self.request,
+            "Registrado com sucesso."
+        )
         return True
 
 '''
@@ -96,7 +113,11 @@ class LoginView(FormView):
             return HttpResponseRedirect(reverse_lazy('pontoEletronico:frequenciaResumo'))
         return HttpResponseRedirect(reverse_lazy('pontoEletronico:index'))#Erro
     def form_invalid(self, form):
-        return HttpResponseRedirect(reverse_lazy('pontoEletronico:index'))#Erro
+        messages.error(
+            self.request,
+            "Username ou password invalidos."
+        )
+        return super(LoginView, self).form_invalid(form)
 
 '''
 Resumo com as frequencias de um mes/ano.
@@ -167,6 +188,32 @@ class BolsistaDetail(DetailView):
             return Bolsista.objects.get(user=self.request.user)
         return super(BolsistaDetail,self).get_object(queryset)
 
+class BolsistaUpdate(UpdateView):
+    model = Bolsista
+    fields = ['nome','email', 'telefone']
+    template_name = 'bolsista_form_update.html'
+
+    def get_object(self, queryset=None):
+        return Bolsista.objects.get(user=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy('pontoEletronico:bolsistaDetail', kwargs={'pk':-1})
+
+class CoordenadorBolsistaUpdate(UpdateView,CoordenadorRequiredMixi):
+    model = Bolsista
+    template_name = 'bolsista_form.html'
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            "Atualizado com sucesso."
+        )
+        return reverse_lazy('pontoEletronico:bolsistaList')
+
+
 class BolsistaCreate(CreateView,CoordenadorRequiredMixi):
     model = Bolsista
     template_name = 'bolsista_form.html'
@@ -203,9 +250,23 @@ class BolsistaCreate(CreateView,CoordenadorRequiredMixi):
         return self.render_to_response(self.get_context_data(form=form,user_form=user_form))
 
     def get_success_url(self):
+        messages.success(
+            self.request,
+            "Cadastrado com sucesso."
+        )
         return reverse_lazy('pontoEletronico:bolsistaList')
 
-class BolsistaList(ListView,):
+class BolsistaDelete(DeleteView,CoordenadorRequiredMixi):
+    model = Bolsista
+    template_name = 'bolsista_confirm_delete.html'
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            "Excluido com sucesso."
+        )
+        return reverse_lazy('pontoEletronico:bolsistaList')
+
+class BolsistaList(ListView):
     model = Bolsista
     template_name = 'bolsista_list.html'
 
@@ -216,6 +277,11 @@ class PresencaCreate(CreateView):
     template_name = 'presenca_form.html'
 
     def get_success_url(self):
+        messages.success(
+            self.request,
+            "Cadastrado com sucesso."
+        )
+
         return reverse_lazy('pontoEletronico:presencaList')
 
     def form_valid(self, form):
@@ -237,6 +303,10 @@ class PresencaUpdate(UpdateView):
     template_name = 'presenca_form.html'
 
     def get_success_url(self):
+        messages.success(
+            self.request,
+            "Atualizado com sucesso."
+        )
         return reverse_lazy('pontoEletronico:presencaList')
 
 
@@ -248,5 +318,12 @@ class PresencaList(ListView):
     def get_queryset(self):
         return Presenca.objects.all().order_by('data').reverse()
 
-class PresencaDelete(DeleteView):
+class PresencaDelete(DeleteView,CoordenadorRequiredMixi):
     model = Presenca
+    template_name = 'presenca_confirm_delete.html'
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            "Excluido com sucesso."
+        )
+        return reverse_lazy('pontoEletronico:presencaList')

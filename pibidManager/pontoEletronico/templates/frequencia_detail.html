@@ -1,43 +1,50 @@
-{% extends 'base.html' %}
+{% extends 'base_registration.html' %}
 {% load extra_tags %}
 {% block titulo %} Frequência{% endblock %}
 {% block conteudo %}
     <div class="container">
         <div class="row">
-            <div class="col-sm-2">Bolsista:</div>
+            <div class="col-sm-2"><strong>Bolsista:</strong></div>
             <div class="col-sm-8">{{ object.bolsista }}</div>
         </div>
         <div class="row">
-            <div class="col-sm-2">Mês:</div>
+            <div class="col-sm-2"><strong>Mês:</strong></div>
             <div class="col-sm-8">{{ object.mes }}/{{ object.ano}}</div>
         </div>
         <div class="row">
-            <div class="col-sm-2">Carga horaria:</div>
+            <div class="col-sm-2"><strong>Carga horária:</strong></div>
             <div class="col-sm-8">{{ object.carga_horaria | timedelta }}</div>
         </div>
     </div>
-    <h3>
-        Presencas:
-    </h3>
-    <table class="table table-condensed">
-    <thead>
-        <tr>
-            <th>Data</th>
-            <th>Entrada</th>
-            <th>Saida</th>
-            <th>Duracao</th>
-        </tr>
-    </thead>
-    {% for presenca in object_list %}
-    <tbody>
-        <tr>
-            <td>{{ presenca.data | date:'d/m/y' }}</td>
-            <td>{{ presenca.chegada | time:"H:i" }}</td>
-            <td>{{ presenca.saida | time:"H:i" }}</td>
-            <td>{{ presenca.duracao | timedelta }}</td>
-        </tr>
-    </tbody>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Presenças</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="dataTable_wrapper table-responsive">
+        <table class="table table-striped table-bordered table-hover dataTables-list">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Entrada</th>
+                <th>Saida</th>
+                <th>Duracao</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for presenca in object_list %}
+            <tr>
+                <td>{{ presenca.data | date:'d/m/y' }}</td>
+                <td>{{ presenca.chegada | time:"H:i" }}</td>
+                <td>{{ presenca.saida | time:"H:i" }}</td>
+                <td>{{ presenca.duracao | timedelta }}</td>
+            </tr>
 
-    {% endfor %}
-    </table>
+        {% endfor %}
+
+        </tbody>
+        </table>
+    </div>
 {% endblock %}

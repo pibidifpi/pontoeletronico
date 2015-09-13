@@ -1,15 +1,35 @@
-{% extends 'base.html' %}
+{% extends 'base_registration.html' %}
 {% load extra_tags %}
+{% block titulo %} Lista de Presenças{% endblock %}
 {% block conteudo %}
-    <table class="ptable">
+
+    {% if messages %}
+        {% for message in messages %}
+
+            {% if message.tags == "error" %}
+
+                <div class="alert alert-danger" role="alert"> {{ message }}</div>
+            {% else %}
+                <div class="alert alert-{{ message.tags }}" role="alert"> {{ message }}</div>
+            {% endif %}
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="dataTable_wrapper table-responsive">
+        <table class="table table-striped table-bordered table-hover dataTables-list">
+        <thead>
         <tr>
             <th>Bolsista</th>
             <th>Data</th>
             <th>Chegada</th>
             <th>Saida</th>
             <th>Durancao</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
 
         </tr>
+        </thead>
 
     {% for presenca in object_list %}
         <tr>
@@ -24,29 +44,21 @@
             </td>
 
             <td>{{ presenca.duracao | timedelta}}</td>
-            <td><a href="{% url 'pontoEletronico:presencaUpdate' presenca.id%}" >Alterar</a></td>
-            <td><a href="{% url 'pontoEletronico:presencaUpdate' presenca.id%}" >Excluir</a></td>
+            <td align="center">
+                <a title="Alterar" href="{% url 'pontoEletronico:presencaUpdate' presenca.id%}"><span class="glyphicon glyphicon-edit"></span></a>&nbsp;
+            </td>
+            <td align="center">
+                <a title="Excluir" href="{% url 'pontoEletronico:presencaDelete' presenca.id%}"><span class="glyphicon glyphicon-trash"></span></a>&nbsp;
+            </td>
         </tr>
     {% endfor %}
     </table>
-    <div class="paginator">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}"><</a>
-            {% endif %}
-            {% for num_page in paginator.page_range %}
-                {% if num_page != page_obj.number %}
-                    <a href="?page={{ num_page }}">{{ num_page }}</a>
-                {% else %}
-                    {{ page_obj.number }}
-                {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">></a>
-            {% endif %}
-        </span>
     </div>
-    <p>
-        <a href="{% url 'pontoEletronico:presencaCreate' %}" >Criar Presenca</a>
-    </p>
+
+    <div class="control-group">
+        <label class="control-label" for="salvar"></label>
+        <div class="controls">
+             <a class="btn btn-primary" href="{% url 'pontoEletronico:presencaCreate' %}" >Cadastrar Presenca</a>
+        </div>
+    </div>
 {% endblock %}

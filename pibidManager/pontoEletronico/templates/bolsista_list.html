@@ -1,20 +1,51 @@
-{% extends 'base.html' %}
+{% extends 'base_registration.html' %}
 {% block titulo %} Lista de Bolsista {% endblock %}
 {% block conteudo %}
-<table>
-{% if not object_list %}
-    Sem bolsistas
+
+ {% if messages %}
+    {% for message in messages %}
+
+        {% if message.tags == "error" %}
+
+            <div class="alert alert-danger" role="alert"> {{ message }}</div>
+        {% else %}
+            <div class="alert alert-{{ message.tags }}" role="alert"> {{ message }}</div>
+        {% endif %}
+
+    {% endfor %}
 {% endif %}
+
+<div class="dataTable_wrapper table-responsive">
+    <table class="table table-striped table-bordered table-hover dataTables-list">
+    <thead>
+    <tr>
+        <th>Bolsista</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+
+    </tr>
+    </thead>
+
 {% for bolsista in object_list %}
     <tr>
-        <td><a href="{% url 'pontoEletronico:bolsistaDetail' bolsista.id %}"> {{ bolsista }} </a></td>
-        <td>Alterar</td>
-        <td>Criar</td>
+        <td>{{ bolsista }}</td>
+        <td align="center"><a href="{% url 'pontoEletronico:bolsistaDetail' bolsista.id%}" >ver mais Detalhes</a></td>
+        <td align="center">
+            <a title="Alterar" href="{% url 'pontoEletronico:coordenadorBolsistaUpdate' bolsista.id%}"><span class="glyphicon glyphicon-edit"></span></a>&nbsp;
+        </td>
+        <td align="center">
+            <a title="Excluir" href="{% url 'pontoEletronico:bolsistaDelete' bolsista.id%}"><span class="glyphicon glyphicon-trash"></span></a>&nbsp;
+        </td>
     </tr>
 {% endfor %}
 </table>
-<p>
-    <a href="{% url 'pontoEletronico:bolsistaCreate' %}">Criar Bolsista</a>
-</p>
+
+<div class="control-group">
+        <label class="control-label" for="salvar"></label>
+        <div class="controls">
+             <a class="btn btn-primary" href="{% url 'pontoEletronico:bolsistaCreate' %}" >Cadastrar Bolsista</a>
+        </div>
+    </div>
 
 {% endblock%}
