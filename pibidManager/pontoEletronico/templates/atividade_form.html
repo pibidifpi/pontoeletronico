@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block titulo %} Cadastrar Presença{% endblock %}
+{% block semmenu %}
+    <div class="register-container container">
+        <div class="row">
+            <div class="register span6">
+             <form action="" method="post">
+
+                 <h2>CADASTRAR <span class="red"><strong>ATIVIDADE</strong></span></h2>
+                 {% csrf_token %}
+                 {{ form.erros }}
+
+                {{ form.as_p }}
+                 
+                <button type="submit"/>Cadastrar</button>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+{% endblock %}

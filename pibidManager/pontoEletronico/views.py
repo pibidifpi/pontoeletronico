@@ -16,6 +16,7 @@ from models import *
 from forms import *
 from django.http import HttpResponse
 from django.contrib import messages
+from time import time,localtime
 
 #Classes de restricoes das views
 class CoordenadorRequiredMixi(object):
@@ -51,8 +52,17 @@ class IndexView(FormView):
         user = form.get_user()
         groups = user.groups.values_list('name',flat=True)
         if("Bolsista" in groups):
-            if(self.registrarPresenca(user)):
+            retorno = self.registrarPresenca(user)
+            if( retorno == 0):
                 return HttpResponseRedirect(reverse_lazy('pontoEletronico:index'))
+            else:
+                return HttpResponseRedirect(reverse_lazy('pontoEletronico:registrarAtividade', kwargs={'pk':retorno}))
+
+        messages.error(
+            self.request,
+            "Usuario invalido."
+        )
+
         return HttpResponseRedirect(reverse_lazy('pontoEletronico:index'))#seria pagina de erro
 
     def form_invalid(self, form):
@@ -70,6 +80,12 @@ class IndexView(FormView):
     def registrarPresenca(self, user):
         today = timezone.now()
         bolsista = Bolsista.objects.get(user=user)
+        presencaId = 0
+
+        #logica para montar a hora atual
+        ano, mes, dia, hora, min, seg=localtime(time())[0:6]
+        #fim da montagem da hora atual
+
         try:#Tenta pegar a frequencia do mes do bolsista
             frequencia = Frequencia.objects.get(bolsista=bolsista, mes=today.month, ano=today.year)
         except :#Cria uma nova frequencia caso nao exista
@@ -80,11 +96,20 @@ class IndexView(FormView):
             #return True
         try:#Tenta pegar uma frequencia do dia com entrada. Registro de saida
             presenca = Presenca.objects.get(bolsista=bolsista, data=today.date(),saida=None)
-            presenca.saida = today.time()
+            #presenca.saida = today.time()
+
+            horaAtual = str(hora)+":"+str(min)+":"+str(seg)
+            presenca.saida = horaAtual
+            presencaId = presenca.id
+
             #presenca.save()
             #return True
         except :#Cria uma frequencia somente com a entrarda
-            presenca = Presenca(bolsista=bolsista, data=today.date(), chegada=today.time(), frequencia=frequencia)
+            #presenca = Presenca(bolsista=bolsista, data=today.date(), chegada=today.time(), frequencia=frequencia)
+
+            horaAtual = str(hora)+":"+str(min)+":"+str(seg)
+            presenca = Presenca(bolsista=bolsista, data=today.date(), chegada=horaAtual, frequencia=frequencia)
+
             #presenca.save()
             #return True
         presenca.save()
@@ -93,7 +118,7 @@ class IndexView(FormView):
             self.request,
             "Registrado com sucesso."
         )
-        return True
+        return presencaId
 
 '''
 Login
@@ -327,3 +352,11 @@ class PresencaDelete(DeleteView,CoordenadorRequiredMixi):
             "Excluido com sucesso."
         )
         return reverse_lazy('pontoEletronico:presencaList')
+
+class RegistrarAtividade(UpdateView):
+    model= Presenca
+    fields = ['atividade']
+    template_name = 'atividade_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('pontoEletronico:index')

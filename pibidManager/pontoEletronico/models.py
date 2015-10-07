@@ -20,6 +20,7 @@ class Presenca(models.Model):
     saida = models.TimeField(null=True)
     frequencia = models.ForeignKey('Frequencia')
     atualizacao = models.DateTimeField(auto_now=True)
+    atividade = models.TextField(verbose_name='Atividade', null=True)
 
     def duracao(self):
         if self.saida == None:
@@ -43,6 +44,10 @@ class Frequencia(models.Model):
         total = timezone.timedelta()
         for p in self.presenca_set.all():
             total += p.duracao()
+
+        if(total >= 22) :
+            total = total + 8
+
         return total
 
     def __str__(self):

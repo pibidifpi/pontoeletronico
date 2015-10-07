@@ -25,6 +25,7 @@
             <th>Chegada</th>
             <th>Saida</th>
             <th>Durancao</th>
+            <th>Atividade</th>
             <th>&nbsp;</th>
             <th>&nbsp;</th>
 
@@ -42,8 +43,14 @@
                     Em aberto
                 {% endif %}
             </td>
-
             <td>{{ presenca.duracao | timedelta}}</td>
+            <td>
+                {% if presenca.atividade %}
+                    {{ presenca.atividade}}
+                {% else %}
+                    Não cadastrada
+                {% endif %}
+            </td>
             <td align="center">
                 <a title="Alterar" href="{% url 'pontoEletronico:presencaUpdate' presenca.id%}"><span class="glyphicon glyphicon-edit"></span></a>&nbsp;
             </td>

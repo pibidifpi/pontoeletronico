@@ -29,6 +29,9 @@ urlpatterns = [
     url(r'^presencaCreate/', PresencaCreate.as_view(), name="presencaCreate"),
     url(r'^presencaUpdate/(?P<pk>[0-9,-1]+)', PresencaUpdate.as_view(), name="presencaUpdate"),
     url(r'^presencaDelete/(?P<pk>[0-9,-1]+)', PresencaDelete.as_view(), name="presencaDelete"),
+    url(r'^registrarAtividade/(?P<pk>[0-9,-1]+)', RegistrarAtividade.as_view(), name="registrarAtividade"),
+
+
 
 
 ]
