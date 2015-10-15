@@ -44,9 +44,9 @@ class Frequencia(models.Model):
         total = timezone.timedelta()
         for p in self.presenca_set.all():
             total += p.duracao()
-
-        if(total >= 22) :
-            total = total + 8
+	    #79200 segundos = 22h
+       	if(total.total_seconds() >= 79200) :
+            total = total + timezone.timedelta(hours=8)
 
         return total
 

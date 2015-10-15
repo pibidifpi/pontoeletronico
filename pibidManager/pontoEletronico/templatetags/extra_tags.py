@@ -19,7 +19,6 @@ def group_name(user):
 
 @register.filter(name='timedelta')
 def time_deta(time_delta):
-    hours, remainder = divmod(time_delta.seconds, 3600)
+    hours, remainder = divmod(time_delta.total_seconds(), 3600)
     minutes, seconds = divmod(remainder, 60)
-    minutes = minutes
     return hours.__str__()+"h:"+minutes.__str__()+"m"
