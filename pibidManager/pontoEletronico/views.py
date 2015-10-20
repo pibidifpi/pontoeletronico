@@ -226,6 +226,7 @@ class BolsistaUpdate(UpdateView):
 
 class CoordenadorBolsistaUpdate(UpdateView,CoordenadorRequiredMixi):
     model = Bolsista
+    fields = '__all__'
     template_name = 'bolsista_form.html'
 
     def form_invalid(self, form):
