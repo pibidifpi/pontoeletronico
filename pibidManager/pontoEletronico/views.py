@@ -17,7 +17,7 @@ from forms import *
 from django.http import HttpResponse
 from django.contrib import messages
 from time import time,localtime
-
+#Teste Git
 #Classes de restricoes das views
 class CoordenadorRequiredMixi(object):
     @method_decorator(user_passes_test(lambda u: "Coordenador" in u.groups.values_list('name',flat=True)))
