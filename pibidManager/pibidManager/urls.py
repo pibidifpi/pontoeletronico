@@ -21,7 +21,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^pontoEletronico/', include('pontoEletronico.urls',namespace="pontoEletronico")),
     url(r'^my_admin/jsi18n', 'django.views.i18n.javascript_catalog'),#necessario para o javascript do calendario
-
+    url(r'^$', include('pontoEletronico.urls',namespace="pontoEletronico")),
     url(r'^media/(?P<path>.*)$','django.views.static.serve',
 		{'document_root':settings.MEDIA_ROOT,}
 	),
