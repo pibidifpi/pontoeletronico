@@ -53,6 +53,7 @@ a:hover { text-decoration: none; }
 
 .links a.home { background: url(../../media/home.png) center center no-repeat; }
 .links a.login {  width: 209px;height: 78px;background: url(../../media/login_button.png) center center no-repeat; }
+.links a.inicio {  width: 209px;height: 78px;background: url(../../media/inicio.png) center center no-repeat; }
 .links a.blog { background: url(../../media/blog.png) center center no-repeat; margin-right: 50px; }
 
 .register-container {
@@ -170,7 +171,6 @@ a:hover { text-decoration: none; }
         0 -15px 30px 0 rgba(255,255,255,.05) inset,       
         0 5px 8px 0 rgba(0,0,0,.1) inset;
 }
-
 
 /* ----- Media queries ----- */
 

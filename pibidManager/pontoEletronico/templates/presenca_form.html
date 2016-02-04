@@ -1,22 +1,18 @@
 {% extends 'base_registration.html' %}
-{% block titulo %} Cadastrar Presença{% endblock %}
+{% block titulo %} Dados da Presença{% endblock %}
 {% block conteudo %}
     <form action="" method="post">
         {% csrf_token %}
         {{ form.erros }}
+
         <table>
-        {% for field in form %}
-            <tr>
-                <td>{{ field.label_tag }}</td>
-                <td>{{ field }}</td>
-                <td>{{ field.erros }}</td>
-            </tr>
-        {% endfor %}
+            {{form.as_table}}
         </table>
+
         <div class="control-group">
             <label class="control-label" for="salvar"></label>
             <div class="controls">
-                <input type="submit" class="btn btn-primary" value="Cadastrar"/>
+                <input type="submit" class="btn btn-primary" value="Salvar"/>
                 <a class="btn btn-danger pull-right" href="{% url 'pontoEletronico:presencaList' %}">Voltar</a>
             </div>
         </div>

@@ -23,15 +23,18 @@
         <div class="row">
             <div class="logo span8">
                 <h1>
-                    <img src="{% static 'img/logo_ifpi.png' %}" alt="">&nbsp;
-                    <img src="{% static 'img/logo_pibid.png' %}" alt="">
-                    <p><a href=""> Sistema de Ponto Eletrônico do PIBID Zona Sul<span class="red">.</span></a></p>
+                    <a href="http://www5.ifpi.edu.br/" target="_blank"><img src="{% static 'uploads/logo_ifpi.png' %}" alt=""></a>&nbsp;
+                    <a href="http://www.capes.gov.br/educacao-basica/capespibid" target="_blank"><img src="{% static 'uploads/logo_pibid.png' %}" alt=""></a>
+                    <p>
+                        <a class="navbar-brand" href="{% url 'pontoEletronico:index' %}"> Sistema de Ponto Eletrônico do PIBID Zona Sul<span class="red">.</span></a>
+                    </p>
 
                 </h1>
             </div>
             <div class="links span4">
 
-                 <a class="login" title="Login" href="{% url 'pontoEletronico:login' %}" rel="tooltip" data-placement="bottom" data-original-title="Login"></a>
+                <a class="inicio" title="Ir para o registro de presença" href="{% url 'pontoEletronico:index' %}" rel="tooltip" data-placement="bottom" data-original-title="inicio"></a>
+                <a class="login" title="Login" href="{% url 'pontoEletronico:login' %}" rel="tooltip" data-placement="bottom" data-original-title="Login"></a>
 
             </div>
         </div>

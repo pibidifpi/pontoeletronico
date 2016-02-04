@@ -1,0 +1,77 @@
+{% extends 'base_registration.html' %}
+{% load extra_tags %}
+{% load staticfiles %}
+{% block titulo %} Notícias{% endblock %}
+{% block conteudo %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+            {% if message.tags == "error" %}
+
+                <div class="alert alert-danger" role="alert"> {{ message }}</div>
+            {% else %}
+                <div class="alert alert-{{ message.tags }}" role="alert"> {{ message }}</div>
+            {% endif %}
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="dataTable_wrapper table-responsive">
+        <table class="table table-striped table-bordered table-hover dataTables-list">
+        <thead>
+        <tr>
+            <th>Foto</th>
+            <th>Título</th>
+            <th>Publicada em</th>
+            <th>Texto [amostra]</th>
+            <th>Destacar?</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+
+        </tr>
+        </thead>
+
+    {% for noticia in object_list %}
+        <tr>
+            <td>{% if noticia.foto %}
+                    <img src="{% static 'uploads' %}/{{ noticia.foto}}" width="100">
+                {% else %}
+                    <img src="{% static 'uploads' %}/sem_imagem.png" width="100">
+                {% endif %}
+
+            </td>
+            <td>{{ noticia.titulo }}</td>
+            <td>{{ noticia.data | date:'d/M/y H:i:s' }}</td>
+            <td class="texto-justificar">
+                {% if noticia.texto %}
+                    {{ noticia.texto|slice:"0:200"|linebreaksbr }}...
+                {% else %}
+                    Não cadastrado
+                {% endif %}
+            </td>
+            <td>{% if noticia.destacar %}
+                    Sim
+                {% else %}
+                    Não
+                {% endif %}
+
+            </td>
+            <td align="center">
+                <a title="Alterar" href="{% url 'pontoEletronico:noticiaUpdate' noticia.id%}"><span class="glyphicon glyphicon-edit"></span></a>&nbsp;
+            </td>
+            <td align="center">
+                <a title="Excluir" href="{% url 'pontoEletronico:noticiaDelete' noticia.id%}"><span class="glyphicon glyphicon-trash"></span></a>&nbsp;
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="salvar"></label>
+        <div class="controls">
+             <a class="btn btn-primary" href="{% url 'pontoEletronico:noticiaCreate' %}" >Cadastrar Atividade</a>
+        </div>
+    </div>
+{% endblock %}

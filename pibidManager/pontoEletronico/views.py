@@ -1,3 +1,4 @@
+
 from django.forms.models import modelform_factory
 from django.shortcuts import render
 from django.views.generic import *
@@ -17,8 +18,12 @@ from forms import *
 from django.http import HttpResponse
 from django.contrib import messages
 from time import time,localtime
+from pibid_relatorios.relatorio import *
+
 #Teste Git
 #Classes de restricoes das views
+
+
 class CoordenadorRequiredMixi(object):
     @method_decorator(user_passes_test(lambda u: "Coordenador" in u.groups.values_list('name',flat=True)))
     def dispatch(self, *args, **kwargs):
@@ -46,6 +51,7 @@ class IndexView(FormView):
     def get_context_data(self, **kwargs):
         context = super(IndexView,self).get_context_data(**kwargs)
         context['object_list'] = Presenca.objects.all().order_by('atualizacao').reverse()[:5]
+        context['noticia_list'] = Noticia.objects.all().order_by('data').reverse()[:5]
         return context;
 
     def form_valid(self, form):
@@ -56,7 +62,7 @@ class IndexView(FormView):
             if( retorno == 0):
                 return HttpResponseRedirect(reverse_lazy('pontoEletronico:index'))
             else:
-                return HttpResponseRedirect(reverse_lazy('pontoEletronico:registrarAtividade', kwargs={'pk':retorno}))
+                return HttpResponseRedirect(reverse_lazy('pontoEletronico:registrarTarefa', kwargs={'pk':retorno}))
 
         messages.error(
             self.request,
@@ -96,19 +102,22 @@ class IndexView(FormView):
             #return True
         try:#Tenta pegar uma frequencia do dia com entrada. Registro de saida
             presenca = Presenca.objects.get(bolsista=bolsista, data=today.date(),saida=None)
-            #presenca.saida = today.time()
-
+            presenca.saida = today.time()
+            """ estava bugando por causa do horario de verao
             horaAtual = str(hora)+":"+str(min)+":"+str(seg)
             presenca.saida = horaAtual
+            """
             presencaId = presenca.id
 
             #presenca.save()
             #return True
         except :#Cria uma frequencia somente com a entrarda
-            #presenca = Presenca(bolsista=bolsista, data=today.date(), chegada=today.time(), frequencia=frequencia)
+            presenca = Presenca(bolsista=bolsista, data=today.date(), chegada=today.time(), frequencia=frequencia)
 
+            """ estava bugando por causa do horario de verao
             horaAtual = str(hora)+":"+str(min)+":"+str(seg)
             presenca = Presenca(bolsista=bolsista, data=today.date(), chegada=horaAtual, frequencia=frequencia)
+            """
 
             #presenca.save()
             #return True
@@ -164,7 +173,7 @@ class FrequenciaResumo(ListView,CoordenadorRequiredMixi):
         return Frequencia.objects.filter(mes=self.mes,ano=self.ano)
 
 
-class FrequenciaList(ListView):
+class FrequenciaList(ListView, BolsistaRequiredMixi):
     template_name = 'frequencia_list.html'
     model = Frequencia
 
@@ -204,7 +213,7 @@ class FrequenciaDetail(ListView,SingleObjectMixin):
         return self.object.presenca_set.all()
 
 
-class BolsistaDetail(DetailView):
+class BolsistaDetail(DetailView, BolsistaRequiredMixi):
     model = Bolsista
     template_name = 'bolsista_detail.html'
 
@@ -213,7 +222,7 @@ class BolsistaDetail(DetailView):
             return Bolsista.objects.get(user=self.request.user)
         return super(BolsistaDetail,self).get_object(queryset)
 
-class BolsistaUpdate(UpdateView):
+class BolsistaMeusDadosUpdate(UpdateView, BolsistaRequiredMixi):
     model = Bolsista
     fields = ['nome','email', 'telefone']
     template_name = 'bolsista_form_update.html'
@@ -224,7 +233,7 @@ class BolsistaUpdate(UpdateView):
     def get_success_url(self):
         return reverse_lazy('pontoEletronico:bolsistaDetail', kwargs={'pk':-1})
 
-class CoordenadorBolsistaUpdate(UpdateView,CoordenadorRequiredMixi):
+class BolsistaUpdate(UpdateView,CoordenadorRequiredMixi):
     model = Bolsista
     fields = '__all__'
     template_name = 'bolsista_form.html'
@@ -292,12 +301,13 @@ class BolsistaDelete(DeleteView,CoordenadorRequiredMixi):
         )
         return reverse_lazy('pontoEletronico:bolsistaList')
 
-class BolsistaList(ListView):
+class BolsistaList(ListView, CoordenadorRequiredMixi):
     model = Bolsista
+    queryset = Bolsista.objects.all().order_by('id').reverse()
     template_name = 'bolsista_list.html'
 
 
-class PresencaCreate(CreateView):
+class PresencaCreate(CreateView, CoordenadorRequiredMixi):
     model = Presenca
     form_class = PresencaForm
     template_name = 'presenca_form.html'
@@ -323,9 +333,9 @@ class PresencaCreate(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class PresencaUpdate(UpdateView):
+class PresencaUpdate(UpdateView, CoordenadorRequiredMixi):
     model = Presenca
-    fields = '__all__'
+    form_class = PresencaForm
     template_name = 'presenca_form.html'
 
     def get_success_url(self):
@@ -336,10 +346,9 @@ class PresencaUpdate(UpdateView):
         return reverse_lazy('pontoEletronico:presencaList')
 
 
-class PresencaList(ListView):
+class PresencaList(ListView, CoordenadorRequiredMixi):
     model= Presenca
     template_name = 'presenca_list.html'
-    paginate_by = 20
 
     def get_queryset(self):
         return Presenca.objects.all().order_by('data').reverse()
@@ -354,10 +363,240 @@ class PresencaDelete(DeleteView,CoordenadorRequiredMixi):
         )
         return reverse_lazy('pontoEletronico:presencaList')
 
-class RegistrarAtividade(UpdateView):
+class RegistrarTarefa(UpdateView, BolsistaRequiredMixi):
     model= Presenca
-    fields = ['atividade']
-    template_name = 'atividade_form.html'
+    form_class = RegistrarTarefaForm
+    template_name = 'registrar_tarefa_form.html'
 
     def get_success_url(self):
         return reverse_lazy('pontoEletronico:index')
+    
+
+class AtividadeCreate(CreateView, CoordenadorRequiredMixi):
+    model = Atividade
+    form_class = AtividadeForm
+    template_name = 'atividade_form.html'
+
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            "Cadastrado com sucesso."
+        )
+
+        return reverse_lazy('pontoEletronico:atividadeList')
+
+
+class AtividadeUpdate(UpdateView, CoordenadorRequiredMixi):
+    model = Atividade
+    form_class = AtividadeForm
+    template_name = 'atividade_form.html'
+
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            "Atualizado com sucesso."
+        )
+        return reverse_lazy('pontoEletronico:atividadeList')
+
+
+class AtividadeList(ListView, CoordenadorRequiredMixi):
+    model= Atividade
+    template_name = 'atividade_list.html'
+
+    def get_queryset(self):
+        return Atividade.objects.all().order_by('data').reverse()
+
+class AtividadeDelete(DeleteView,CoordenadorRequiredMixi):
+    model = Atividade
+    template_name = 'atividade_confirm_delete.html'
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            "Excluido com sucesso."
+        )
+        return reverse_lazy('pontoEletronico:atividadeList')
+
+class AtividadeListBolsista(ListView, BolsistaRequiredMixi):
+    model= Atividade
+    template_name = 'atividade_list_bolsista.html'
+
+    def get_queryset(self):
+        bolsista = Bolsista.objects.get(user=self.request.user)
+
+        try:
+            lista = Atividade.objects.filter(bolsistas=bolsista).order_by('data').reverse()
+        except Atividade.DoesNotExist:
+            lista = None
+
+        return lista
+
+class AtividadeDetail(DetailView, BolsistaRequiredMixi):
+    model = Atividade
+    template_name = 'atividade_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AtividadeDetail,self).get_context_data()
+        bolsista = Bolsista.objects.get(user=self.request.user)
+
+        try:
+            context['object_list'] = Atividade.objects.filter(bolsistas=bolsista).order_by('data').reverse()[:5]
+        except Atividade.DoesNotExist:
+            context['object_list'] = None
+
+        return context
+
+
+class NoticiaCreate(CreateView, CoordenadorRequiredMixi):
+    model = Noticia
+    fields = '__all__'
+    template_name = 'noticia_form.html'
+
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            "Cadastrado com sucesso."
+        )
+
+        return reverse_lazy('pontoEletronico:noticiaList')
+
+
+class NoticiaUpdate(UpdateView, CoordenadorRequiredMixi):
+    model = Noticia
+    fields = '__all__'
+    template_name = 'noticia_form.html'
+
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            "Atualizado com sucesso."
+        )
+        return reverse_lazy('pontoEletronico:noticiaList')
+
+
+class NoticiaList(ListView, CoordenadorRequiredMixi):
+    model= Noticia
+    template_name = 'noticia_list.html'
+
+    def get_queryset(self):
+        return Noticia.objects.all().order_by('data').reverse()
+
+class NoticiaDelete(DeleteView,CoordenadorRequiredMixi):
+    model = Noticia
+    template_name = 'noticia_confirm_delete.html'
+    def get_success_url(self):
+        messages.success(
+            self.request,
+            "Excluido com sucesso."
+        )
+        return reverse_lazy('pontoEletronico:noticiaList')
+
+class NoticiaListBolsista(ListView, BolsistaRequiredMixi):
+    model= Noticia
+    template_name = 'noticia_list_bolsista.html'
+
+    def get_queryset(self):
+        return Noticia.objects.all().order_by('data').reverse()
+
+class NoticiaDetail(DetailView, BolsistaRequiredMixi):
+    model = Noticia
+    template_name = 'noticia_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(NoticiaDetail,self).get_context_data()
+        context['object_list'] = Noticia.objects.all().order_by('data').reverse()[:5]
+        return context
+
+class InstitucionalView(TemplateView):
+    template_name = 'institucional.html'
+
+class DocumentosView(TemplateView):
+    template_name = 'documentos.html'
+
+class RelatorioView(FormView, CoordenadorRequiredMixi):
+    form_class = RelatorioPresencaForm
+    template_name = 'relatorio_presenca_form.html'
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            "Username ou password invalidos."
+        )
+        return super(RelatorioView, self).form_invalid(form)
+
+class TestePDF(RelatoriosPDF, CoordenadorRequiredMixi):
+
+    def dispatch(self, request, *args, **kwargs):
+        self.novo_arquivo()
+        self.abrir()
+        self.seta(100, 100, 'Hello world.')
+        self.imprimir()
+
+        return self.response
+
+
+class RelatorioPresencaWord(RelatoriosWord, CoordenadorRequiredMixi):
+    nome_arquivo = 'relatorio_frequencia'
+    titulo = 'CONTROLE DE FREQUENCIA DOS ALUNOS BOLSISTAS'
+    cabecalho_tabela = ['Data','Entrada','Saida','Duracao','Atividade desenvolvida']
+
+    def dispatch(self, request, *args, **kwargs):
+        self.seta_listagem(request)
+        self.construir_relatorio()
+
+        return self.response
+
+    def seta_listagem(self, request):
+
+        condicao = '1=1'
+        if request.POST.get('frequencia') != '':
+            #condicao += ' and  MONTH(data) in (SELECT mes FROM pontoEletronico_frequencia where id = '+request.POST.get('frequencia')+') and YEAR(data) in (SELECT ano FROM pontoEletronico_frequencia where id = '+request.POST.get('frequencia')+') '
+            condicao += ' and frequencia_id = '+request.POST.get('frequencia')
+
+        if request.POST.get('bolsista') != '':
+            condicao += ' and bolsista_id = '+request.POST.get('bolsista')
+
+        self.listagem = Presenca.objects.raw('SELECT * FROM pontoEletronico_presenca where ' + condicao + ' order by bolsista_id, data desc')
+
+
+    def construir_relatorio(self):
+
+        lista = [[]] #criando uma matriz
+
+        #logica do agrupamento da consulta por bolsista
+        bolsista_atual = None
+        contador_bolsistas = -1
+
+        for presenca in self.listagem:
+
+            if bolsista_atual != str(presenca.bolsista):
+                bolsista_atual = str(presenca.bolsista)
+                contador_bolsistas += 1
+
+            """try:
+                lista[contador_bolsistas].append(presenca)
+            except :
+                None"""
+
+            lista[contador_bolsistas].append(presenca)
+
+        #fim logica do agrupamento
+
+        self.novo_arquivo()
+
+        for bolsista in lista:
+
+            if contador_bolsistas != -1:
+                nome_bolsista = str(bolsista[0].bolsista)
+            else:
+                nome_bolsista = ''
+
+            self.seta_agrupamento("Bolsista: " + nome_bolsista, 4)
+            self.abrir_tabela()
+
+            for presenca in bolsista:
+                self.seta_linha([str(presenca.data), str(presenca.chegada), str(presenca.saida),
+                                str(presenca.duracao), str(presenca.atividade.encode('utf-8'))])
+
+            self.fechar_tabela()
+            self.quebrar_linha()
+

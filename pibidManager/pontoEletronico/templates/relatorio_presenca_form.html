@@ -1,0 +1,36 @@
+{% extends 'base_registration.html' %}
+{% block titulo %} Relatório de Presença{% endblock %}
+{% block conteudo %}
+    <form action="{% url 'pontoEletronico:relatorioPresencaWord'%}" method="post" target="_blank">
+        {% csrf_token %}
+        {{ form.erros }}
+         {% if messages %}
+                {% for message in messages %}
+
+                    {% if message.tags == "error" %}
+
+                        <div class="alert alert-danger" role="alert"> {{ message }}</div>
+                    {% else %}
+                        <div class="alert alert-{{ message.tags }}" role="alert"> {{ message }}</div>
+                    {% endif %}
+
+                {% endfor %}
+            {% endif %}
+        <table>
+        {% for field in form %}
+            <tr>
+                <td>{{ field.label_tag }}</td>
+                <td>{{ field }}</td>
+                <td>{{ field.erros }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        <div class="control-group">
+            <label class="control-label" for="salvar"></label>
+            <div class="controls">
+                <input type="submit" class="btn btn-primary" value="Enviar"/>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

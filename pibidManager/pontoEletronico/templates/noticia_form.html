@@ -1,0 +1,21 @@
+{% extends 'base_registration.html' %}
+{% block titulo %} Dados da Notícia{% endblock %}
+{% block conteudo %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.erros }}
+
+        <table>
+            {{form.as_table}}
+        </table>
+
+        <div class="control-group">
+            <label class="control-label" for="salvar"></label>
+            <div class="controls">
+                <input type="submit" class="btn btn-primary" value="Salvar"/>
+                <a class="btn btn-danger pull-right" href="{% url 'pontoEletronico:noticiaList' %}">Voltar</a>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

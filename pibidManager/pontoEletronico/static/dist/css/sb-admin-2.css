@@ -361,4 +361,12 @@ table.dataTable thead .sorting:after {
 
 .margin-top-10{margin-top: 10%;}
 
+.width-full{width: 99%;}
+
 .width-65{width: 65%;}
+
+.errorlist li {color: #a94442; float: right;}
+
+.texto-justificar{text-align: justify;}
+
+input[type="text"], textarea, select {width: 100%;}

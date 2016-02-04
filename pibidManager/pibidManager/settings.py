@@ -14,14 +14,12 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_IMG = os.path.dirname(os.path.realpath(__file__))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8$$vz@(5h#78um59r+ij-nm9*r*9l$cgt)=(yg+0&2^&x6=*6t'
+SECRET_KEY = '8$$vz@(5h#78umpIbIdj-nm9*r*9l$sit3=(yg+0&2^&x6=*6t'
 
 DEBUG = True
 TEMPLATE_DEBUG = True
@@ -102,14 +100,13 @@ DATABASES = {
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'America/Fortaleza'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
-
+#USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -118,7 +115,7 @@ STATIC_URL = '/static/'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.join(BASE_IMG,'img')
+MEDIA_ROOT = os.path.join(BASE_DIR,'pontoEletronico/static/uploads')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.

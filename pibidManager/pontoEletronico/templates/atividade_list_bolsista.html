@@ -1,0 +1,20 @@
+{% extends 'base_registration.html' %}
+{% load extra_tags %}
+{% block titulo %} Atividades{% endblock %}
+{% block conteudo %}
+    <div class="dataTable_wrapper table-responsive">
+
+        <ul>
+        {% for atividade in object_list %}
+            <li>
+                <a href="{% url 'pontoEletronico:atividadeDetail' atividade.id %}"> {{ atividade.data }} - {{ atividade }} </a>
+            </li>
+
+            {% empty %}
+                <li>Nenhuma atividade cadastrada para você no momento.</li>
+
+        {% endfor %}
+
+        </ul>
+    </div>
+{% endblock %}

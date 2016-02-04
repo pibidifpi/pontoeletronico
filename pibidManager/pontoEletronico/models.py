@@ -12,6 +12,9 @@ class Bolsista(models.Model):
     def __str__(self):
         return self.nome.encode('utf-8')
 
+    class Meta:
+        ordering = ["nome"]
+
 
 class Presenca(models.Model):
     bolsista = models.ForeignKey('Bolsista')
@@ -20,7 +23,8 @@ class Presenca(models.Model):
     saida = models.TimeField(null=True)
     frequencia = models.ForeignKey('Frequencia')
     atualizacao = models.DateTimeField(auto_now=True)
-    atividade = models.TextField(verbose_name='Atividade', null=True)
+    tarefa = models.TextField(verbose_name='Tarefa', null=True, blank=True)
+    atividade = models.ForeignKey('Atividade', null=True, blank=True)
 
     def duracao(self):
         if self.saida == None:
@@ -52,3 +56,33 @@ class Frequencia(models.Model):
 
     def __str__(self):
         return self.bolsista.nome.encode('utf-8')+"-"+self.mes.__str__()+"/"+self.ano.__str__()
+
+    class Meta:
+        ordering = ["-id"]
+
+class Atividade(models.Model):
+    evento = models.CharField(max_length=100)
+    local = models.CharField(max_length=100)
+    data = models.DateField(default=timezone.now)
+    texto = models.TextField(null=True, blank=True)
+    bolsistas = models.ManyToManyField(Bolsista)
+
+    def __str__(self):
+        return self.evento.encode('utf-8')
+
+    class Meta:
+        ordering = ["-data"]
+
+class Noticia(models.Model):
+    titulo = models.CharField(max_length=100)
+    data = models.DateTimeField(auto_now=True)
+    texto = models.TextField(null=True, blank=True)
+    foto = models.FileField(upload_to='fotos_noticias/', null=True, blank=True)
+    destacar = models.BooleanField(default=False, verbose_name='Destacar?')
+
+    def __str__(self):
+        return self.titulo.encode('utf-8')
+
+    class Meta:
+        ordering = ["-data"]
+

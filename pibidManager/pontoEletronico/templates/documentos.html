@@ -1,0 +1,28 @@
+{% extends 'base_registration.html' %}
+{% load extra_tags %}
+{% load staticfiles %}
+{% block titulo %} Documentos{% endblock %}
+{% block conteudo %}
+
+      <div class="dataTable_wrapper table-responsive">
+
+        <p> Esta página contém links de download dos documentos utilizados no Pibid.  </p>
+
+        <ul>
+            <li>
+                <a href="{% static 'uploads' %}/documentos/manual_do_bolsista.pdf" target="_blank"> Manual do bolsista</a>
+            </li>
+            <li>
+                <a href="{% static 'uploads' %}/documentos/modelodeclaracao_nacumulo.doc" target="_blank"> Modelo de declaração de não acumulo de bolsas</a>
+            </li>
+            <li>
+                <a href="{% static 'uploads' %}/documentos/modelo_relatorio_bolsista.docx" target="_blank"> Modelo de relatório do bolsista</a>
+            </li>
+            <li>
+                <a href="{% static 'uploads' %}/documentos/t_compromisso_bolsista_aluno.doc" target="_blank"> Termo de compromisso do bolsista-aluno</a>
+            </li>
+        </ul>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base_registration.html' %}
+{% load extra_tags %}
+{% block titulo %} Atividade {% endblock %}
+{% block conteudo %}
+    <div class="">
+        <div class="row">
+            <div class="col-sm-2"><strong>Evento:</strong></div>
+            <div class="col-sm-8">{{ object.evento }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Local:</strong></div>
+            <div class="col-sm-8">{{ object.local }}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Data:</strong></div>
+            <div class="col-sm-8">{{ object.data }}</div>
+        </div>
+        <br>
+        <div class="row">
+                <div class="col-sm-8 texto-justificar">{{ object.texto|linebreaksbr }}</div>
+
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h3 class="page-header">Eventos mais recentes</h3>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+     <ul>
+        {% for outros in object_list %}
+        <li>
+            <a href="{% url 'pontoEletronico:atividadeDetail' outros.id %}"> {{ outros.data }} - {{ outros }} </a>
+        </li>
+        {% endfor %}
+
+    </ul>
+
+    <div class="control-group">
+        <label class="control-label" for="salvar"></label>
+        <div class="controls">
+            <a class="btn btn-primary" href="{% url 'pontoEletronico:atividadeListBolsista' %}">Mostrar todos</a>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base_registration.html' %}
+{% load extra_tags %}
+{% block titulo %} Atividades{% endblock %}
+{% block conteudo %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+            {% if message.tags == "error" %}
+
+                <div class="alert alert-danger" role="alert"> {{ message }}</div>
+            {% else %}
+                <div class="alert alert-{{ message.tags }}" role="alert"> {{ message }}</div>
+            {% endif %}
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="dataTable_wrapper table-responsive">
+        <table class="table table-striped table-bordered table-hover dataTables-list">
+        <thead>
+        <tr>
+            <th>Evento</th>
+            <th>Local</th>
+            <th>Data</th>
+            <th>Texto [amostra]</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+
+        </tr>
+        </thead>
+
+    {% for atividade in object_list %}
+        <tr>
+            <td>{{ atividade.evento }}</td>
+            <td>{{ atividade.local }}</td>
+            <td>{{ atividade.data | date:"d/M/Y" }}</td>
+            <td>
+                {% if atividade.texto %}
+                    {{ atividade.texto|slice:"0:200"|linebreaksbr }} ...
+                {% else %}
+                    Não cadastrado
+                {% endif %}
+            </td>
+            <td align="center">
+                <a title="Alterar" href="{% url 'pontoEletronico:atividadeUpdate' atividade.id%}"><span class="glyphicon glyphicon-edit"></span></a>&nbsp;
+            </td>
+            <td align="center">
+                <a title="Excluir" href="{% url 'pontoEletronico:atividadeDelete' atividade.id%}"><span class="glyphicon glyphicon-trash"></span></a>&nbsp;
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="salvar"></label>
+        <div class="controls">
+             <a class="btn btn-primary" href="{% url 'pontoEletronico:atividadeCreate' %}" >Cadastrar Atividade</a>
+        </div>
+    </div>
+{% endblock %}

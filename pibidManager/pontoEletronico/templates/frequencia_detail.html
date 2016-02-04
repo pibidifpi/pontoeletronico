@@ -30,16 +30,18 @@
                 <th>Data</th>
                 <th>Entrada</th>
                 <th>Saida</th>
-                <th>Duracao</th>
+                <th>Duração</th>
+                <th>Atividade</th>
             </tr>
         </thead>
         <tbody>
         {% for presenca in object_list %}
             <tr>
-                <td>{{ presenca.data | date:'d/m/y' }}</td>
+                <td>{{ presenca.data | date:'d/M/y' }}</td>
                 <td>{{ presenca.chegada | time:"H:i" }}</td>
                 <td>{{ presenca.saida | time:"H:i" }}</td>
                 <td>{{ presenca.duracao | timedelta }}</td>
+                <td>{{ presenca.atividade }}</td>
             </tr>
 
         {% endfor %}

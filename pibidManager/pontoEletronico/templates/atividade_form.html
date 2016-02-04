@@ -1,23 +1,33 @@
-{% extends 'base.html' %}
-{% block titulo %} Cadastrar Presença{% endblock %}
-{% block semmenu %}
-    <div class="register-container container">
-        <div class="row">
-            <div class="register span6">
-             <form action="" method="post">
+{% extends 'base_registration.html' %}
+{% block titulo %} Dados da Atividade{% endblock %}
+{% block conteudo %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.erros }}
 
-                 <h2>CADASTRAR <span class="red"><strong>ATIVIDADE</strong></span></h2>
-                 {% csrf_token %}
-                 {{ form.erros }}
+        <table>
+            {{ form.as_table }}
+        </table>
 
-                {{ form.as_p }}
+        <br>
 
-                <button type="submit"/>Cadastrar</button>
-                </form>
+        <p>
+            Para selecionar mais de um bolsista:
+        <ul class="text-warning">
+            <li>No Windows: Segure o botão Ctrl para selecionar múltiplas opções</li>
+            <li>No Mac: Segure o botão de comando para selecionar múltiplas opções</li>
+        </ul>
+        </p>
+
+
+        <div class="control-group">
+            <label class="control-label" for="salvar"></label>
+
+            <div class="controls">
+                <input type="submit" class="btn btn-primary" value="Salvar"/>
+                <a class="btn btn-danger pull-right" href="{% url 'pontoEletronico:atividadeList' %}">Voltar</a>
             </div>
-
-
         </div>
-    </div>
+    </form>
 
 {% endblock %}

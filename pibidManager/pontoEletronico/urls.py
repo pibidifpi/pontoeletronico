@@ -21,17 +21,34 @@ urlpatterns = [
     url(r'^bolsistaList/', BolsistaList.as_view(), name="bolsistaList"),
     url(r'^bolsistaCreate/', BolsistaCreate.as_view(), name="bolsistaCreate"),
     url(r'^bolsistaUpdate/(?P<pk>[0-9,-1]+)', BolsistaUpdate.as_view(), name="bolsistaUpdate"),
-    url(r'^coordenadorBolsistaUpdate/(?P<pk>[0-9,-1]+)', CoordenadorBolsistaUpdate.as_view(), name="coordenadorBolsistaUpdate"),
-
     url(r'^bolsistaDelete/(?P<pk>[0-9,-1]+)', BolsistaDelete.as_view(), name="bolsistaDelete"),
+    url(r'^bolsistaMeusDadosUpdate/(?P<pk>[0-9,-1]+)', BolsistaMeusDadosUpdate.as_view(), name="bolsistaMeusDadosUpdate"),
 
     url(r'^presencaList/', PresencaList.as_view(), name="presencaList"),
     url(r'^presencaCreate/', PresencaCreate.as_view(), name="presencaCreate"),
     url(r'^presencaUpdate/(?P<pk>[0-9,-1]+)', PresencaUpdate.as_view(), name="presencaUpdate"),
     url(r'^presencaDelete/(?P<pk>[0-9,-1]+)', PresencaDelete.as_view(), name="presencaDelete"),
-    url(r'^registrarAtividade/(?P<pk>[0-9,-1]+)', RegistrarAtividade.as_view(), name="registrarAtividade"),
+    url(r'^registrarTarefa/(?P<pk>[0-9,-1]+)', RegistrarTarefa.as_view(), name="registrarTarefa"),
+    
+    url(r'^atividadeList/', AtividadeList.as_view(), name="atividadeList"),
+    url(r'^atividadeCreate/', AtividadeCreate.as_view(), name="atividadeCreate"),
+    url(r'^atividadeUpdate/(?P<pk>[0-9,-1]+)', AtividadeUpdate.as_view(), name="atividadeUpdate"),
+    url(r'^atividadeDelete/(?P<pk>[0-9,-1]+)', AtividadeDelete.as_view(), name="atividadeDelete"),
+    url(r'^atividadeListBolsista/', AtividadeListBolsista.as_view(), name="atividadeListBolsista"),
+    url(r'^atividadeDetail/(?P<pk>[0-9,-1]+)', AtividadeDetail.as_view(), name="atividadeDetail"),
+    
+    url(r'^noticiaList/', NoticiaList.as_view(), name="noticiaList"),
+    url(r'^noticiaCreate/', NoticiaCreate.as_view(), name="noticiaCreate"),
+    url(r'^noticiaUpdate/(?P<pk>[0-9,-1]+)', NoticiaUpdate.as_view(), name="noticiaUpdate"),
+    url(r'^noticiaDelete/(?P<pk>[0-9,-1]+)', NoticiaDelete.as_view(), name="noticiaDelete"),
+    url(r'^noticiaListBolsista/', NoticiaListBolsista.as_view(), name="noticiaListBolsista"),
+    url(r'^noticiaDetail/(?P<pk>[0-9,-1]+)', NoticiaDetail.as_view(), name="noticiaDetail"),
 
+    url(r'^institucional/',InstitucionalView.as_view(), name="institucional"),
+    url(r'^documentos/',DocumentosView.as_view(), name="documentos"),
 
-
+    url(r'^relatorioPresenca/', RelatorioView.as_view(), name="relatorioPresenca"),
+    url(r'^relatorioPresencaWord/', RelatorioPresencaWord.as_view(), name="relatorioPresencaWord"),
+    url(r'^relatorio1/', TestePDF.as_view(), name="relatorio1"),
 
 ]
