@@ -595,7 +595,7 @@ class RelatorioPresencaWord(RelatoriosWord, CoordenadorRequiredMixi):
 
             for presenca in bolsista:
                 self.seta_linha([str(presenca.data), str(presenca.chegada), str(presenca.saida),
-                                str(presenca.duracao), str(presenca.atividade.encode('utf-8'))])
+                                str(presenca.duracao), str(presenca.tarefa.encode('utf-8'))])
 
             self.fechar_tabela()
             self.quebrar_linha()
