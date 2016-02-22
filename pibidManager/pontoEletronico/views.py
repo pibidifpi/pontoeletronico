@@ -552,8 +552,8 @@ class RelatorioPresencaWord(RelatoriosWord, CoordenadorRequiredMixi):
             #condicao += ' and  MONTH(data) in (SELECT mes FROM pontoEletronico_frequencia where id = '+request.POST.get('frequencia')+') and YEAR(data) in (SELECT ano FROM pontoEletronico_frequencia where id = '+request.POST.get('frequencia')+') '
             condicao += ' and frequencia_id = '+request.POST.get('frequencia')
 
-        if request.POST.get('bolsista') != '':
-            condicao += ' and bolsista_id = '+request.POST.get('bolsista')
+        """if request.POST.get('bolsista') != '':
+            condicao += ' and bolsista_id = '+request.POST.get('bolsista')"""
 
         self.listagem = Presenca.objects.raw('SELECT * FROM pontoEletronico_presenca where ' + condicao + ' order by bolsista_id, data desc')
 
